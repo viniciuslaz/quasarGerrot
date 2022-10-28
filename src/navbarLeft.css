@@ -1,0 +1,48 @@
+.bgBrancoEscuro {
+    background-color: #F2EAE1;
+}
+
+.topoNavbar {
+    min-width: 100%;
+}
+
+.topoTitulo {
+    font-size: 20px;
+    font-weight: 600;
+    font-family: Helvetica;
+    margin: 0;
+}
+
+.topoSpan {
+    width: 5px;
+    height: 30px;
+    background-color: rgb(225, 225, 19);
+}
+
+.userNavbar {
+    min-width: 100%;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.userNome {
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+.userFuncao {
+    color: #FCB308;
+}
+
+.botoesNavbar {
+    min-width: 100%;
+    margin-top: 40px;
+}
+
+.my-menu-link {
+    background: #FCB308;
+    color: black;
+}
