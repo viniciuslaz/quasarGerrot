@@ -1,13 +1,14 @@
 <template>
-      <div class="justify-content-center">
-            <div class="row flex justify-end">
-                  <div class="col-lg-3">
-                        <input type="text" class="q-mb-sm" placeholder="Pesquisar..." v-model="search" />
-                  </div>
-            </div>
-            <div class="row mt-3">
-                  <q-table title="Treats" :rows="filteredItems" :columns="columns" row-key="name" />
-            </div>
+      <div class="q-pa-md tabela">
+            <q-table :rows="filteredItems" :columns="columns"
+                  v-model:pagination="pagination" row-key="name" :visible-columns="visibleColumns">
+                  <template v-slot:top>
+                        <p>Roteadores</p>
+                        <q-space />
+
+                  </template>
+
+            </q-table>
       </div>
 </template>
   
@@ -26,19 +27,41 @@ export default {
                   search: '',
                   columns: [
                         {
-                              name: 'name',
+                              name: 'pppoe',
                               required: true,
-                              label: 'Dessert (100g serving)',
-                              align: 'left',
+                              label: 'PPPoE',
                               field: 'pppoe',
-                              format: val => `${val}`,
+                              align: 'left',
+                              sortable: true,
+                              class: 'rowTeste'
+                        },
+                        {
+                              name: 'mac',
+                              required: true,
+                              label: 'MAC',
+                              field: 'mac',
+                              align: 'left',
+                              sortable: true
+                        },
+                        {
+                              name: 'date',
+                              required: true,
+                              label: 'Data',
+                              field: 'date',
+                              align: 'left',
+                              sortable: true
+                        },
+                        {
+                              name: 'observacao',
+                              required: true,
+                              label: 'Observacao',
+                              align: 'left',
+                              field: 'observacao',
                               sortable: true
                         },
                   ],
                   pagination: {
-                        sortBy: 'Id',
-                        descending: false,
-                        rowsPerPage: 50
+                        rowsPerPage: 7
                   }
             }
       },
@@ -46,7 +69,6 @@ export default {
             document.title = "Controle de roteadores";
       },
       created() {
-            console.log("oi");
             this.ListaRotadores();
 
       },
@@ -56,7 +78,6 @@ export default {
                   axios.get(apiURL)
                         .then(res => {
                               this.roteadores = res.data
-                              console.log(res)
                         })
                         .catch(error => {
                               console.log(error, 'puts')
@@ -73,12 +94,6 @@ export default {
                               console.log(error)
                         })
                   }
-            },
-            sort: function (s) {
-                  if (s === this.currentSort) {
-                        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
-                  }
-                  this.currentSort = s;
             },
             pegarModelo(modelo) {
                   switch (modelo) {
@@ -132,3 +147,7 @@ export default {
       }
 }
 </script>
+
+<style>
+@import './Tabela.css';
+</style>
