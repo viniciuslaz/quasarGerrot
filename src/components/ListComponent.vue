@@ -3,7 +3,7 @@
             <q-table :rows="filteredItems" :columns="columns"
                   v-model:pagination="pagination" row-key="name" :visible-columns="visibleColumns">
                   <template v-slot:top>
-                        <p>Roteadores</p>
+                        <p class="tituloTabela">Lista de roteadores</p>
                         <q-space />
 
                   </template>

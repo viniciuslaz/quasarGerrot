@@ -47,7 +47,7 @@
 			</div>
 		</q-drawer>
 
-		<q-page-container style="background-color: #dce0e6; height: 100vh;">
+		<q-page-container style="background-color: white; height: 100vh;">
 			<router-view />
 		</q-page-container>
 
