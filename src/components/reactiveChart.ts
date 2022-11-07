@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, onMounted, PropType } from "vue";
-import { Doughnut } from 'vue-chartjs'
+import { Doughnut } from "vue-chartjs";
 import {
   Chart as ChartJS,
   Title,
@@ -12,29 +12,23 @@ import {
 } from "chart.js";
 import axios from "axios";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  CategoryScale,
-);
+ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
 var roteadores = [];
 var tplink = 0;
-var datacom = 0
+var datacom = 0;
 var huawei = 0;
-var outros = 0
+var outros = 0;
 
 var valorHuawei = 0;
 var valorDatacom = 0;
 var valorTplink = 0;
-var valorOutros = 0
+var valorOutros = 0;
 
 export default defineComponent({
   name: "DoughnutChart",
   components: {
-      Doughnut,
+    Doughnut,
   },
   props: {
     chartId: {
@@ -74,16 +68,11 @@ export default defineComponent({
 
     function fillData() {
       const updatedChartData = {
-        labels: [
-          "TPLINK",
-          "HUAWEI",
-          "DATACOM",
-          "OUTROS"
-        ],
+        labels: ["TPLINK", "HUAWEI", "DATACOM", "OUTROS"],
         datasets: [
           {
             label: "Valor roteadores",
-            backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+            backgroundColor: ["#2b4c7e", "#567ebb", "#606d80", "#dce0e6"],
             data: [valorTplink, valorHuawei, valorDatacom, valorOutros],
           },
         ],
@@ -92,7 +81,6 @@ export default defineComponent({
       chartData.value = { ...updatedChartData };
     }
 
-
     async function pegaRoteadores() {
       await axios
         .get("https://api.gerrot.star.psi.br/api/")
@@ -100,43 +88,51 @@ export default defineComponent({
           roteadores = res.data;
           for (var x = 0; x < roteadores.length; x++) {
             var modelo = roteadores[x].modelo;
-            switch(modelo){
-                  case 'tplink':{
-                        tplink += 1;
-                        break;
-                  }
-                  case 'huawei': {
-                        huawei += 1;
-                        break;
-                  }
-                  case 'datacom': {
-                        datacom += 1;
-                        break;
-                  }
-                  default: {
-                        outros += 1;
-                  }
+            switch (modelo) {
+              case "tplink": {
+                tplink += 1;
+                break;
+              }
+              case "huawei": {
+                huawei += 1;
+                break;
+              }
+              case "datacom": {
+                datacom += 1;
+                break;
+              }
+              default: {
+                outros += 1;
+              }
             }
           }
-
         })
         .catch((error) => {
           console.log(error, "puts");
         });
     }
 
-    function calculaValores(){
+    function calculaValores() {
       valorHuawei = huawei * 300;
       valorTplink = tplink * 250;
       valorDatacom = datacom * 250;
       valorOutros = outros * 200;
-}
+    }
 
     onMounted(() => {
+      tplink = 0;
+      datacom = 0;
+      huawei = 0;
+      outros = 0;
+
+      valorHuawei = 0;
+      valorDatacom = 0;
+      valorTplink = 0;
+      valorOutros = 0;
       pegaRoteadores();
       setTimeout(() => {
-            calculaValores();
-          }, 2000);
+        calculaValores();
+      }, 2000);
       setTimeout(() => {
         fillData();
       }, 2000);
