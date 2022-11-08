@@ -17,22 +17,22 @@
 
 			<div class="botoesNavbar">
 				<q-list class="">
-					<q-item clickable to="/" :active="link === 'inbox'" @click="link = 'inbox'"
-						active-class="my-menu-link" class="q-px-xl">
-						<q-item-section avatar>
-							<q-icon name="dashboard" />
-						</q-item-section>
-
-						<q-item-section>Dashboard</q-item-section>
-					</q-item>
-
-					<q-item clickable to="/listar" :active="link === 'outbox'" @click="link = 'outbox'"
+					<q-item clickable to="/" :active="link === 'outbox'" @click="link = 'outbox'"
 						active-class="my-menu-link" class="q-px-xl">
 						<q-item-section avatar>
 							<q-icon name="list" />
 						</q-item-section>
 
 						<q-item-section>Listar</q-item-section>
+					</q-item>
+					
+					<q-item clickable to="/dashboard" :active="link === 'inbox'" @click="link = 'inbox'"
+						active-class="my-menu-link" class="q-px-xl">
+						<q-item-section avatar>
+							<q-icon name="dashboard" />
+						</q-item-section>
+
+						<q-item-section>Dashboard</q-item-section>
 					</q-item>
 
 					<q-item clickable :active="link === 'trash'" @click="link = 'trash'"

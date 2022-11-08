@@ -4,12 +4,12 @@ import Dashboard from "../components/Dashboard.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/dashboard",
     name: "home",
     component: Dashboard,
   },
   {
-    path: "/listar",
+    path: "/",
     name: "listar",
     component: ListComponent,
   },
