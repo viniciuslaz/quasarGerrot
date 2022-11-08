@@ -1,11 +1,30 @@
 <template>
       <div class="q-pa-md tabela">
-            <q-table :rows="filteredItems" :columns="columns"
-                  v-model:pagination="pagination" row-key="name" :visible-columns="visibleColumns">
-                  <template v-slot:top>
+            <q-table :rows="ListaRoteadores" :columns="columns" v-model:pagination="pagination" row-key="name"
+                  :visible-columns="visibleColumns">
+                  <template v-slot:top-left>
                         <p class="tituloTabela">Lista de roteadores</p>
                         <q-space />
+                  </template>
 
+                  <template v-slot:top-right>
+                        <q-btn icon="fa-solid fa-infinity" class="q-mr-xs" flat to="/listar"
+                              :color="status == undefined ? 'red' : ''"></q-btn>
+                        <q-btn icon="fa-solid fa-signature" class="q-mr-xs" flat to="/listar?reincidencia=2"></q-btn>
+                        <q-input borderless dense debounce="300" v-model="config.filter" placeholder="Busca">
+                              <template v-slot:append>
+                                    <q-icon name="search" />
+                              </template>
+                        </q-input>
+                  </template>
+
+                  <template v-slot:body-cell-actions="props">
+                        <q-td :props="props">
+                              <q-btn icon="fa-solid fa-eye" size="xs" class="q-mr-xs">
+                              </q-btn>
+                              <q-btn icon="fa-solid fa-trash" size="xs" color="red">
+                              </q-btn>
+                        </q-td>
                   </template>
 
             </q-table>
@@ -19,8 +38,14 @@ var imagem;
 var classe;
 
 export default {
+      props: {
+            reincidencia: String,
+      },
       data() {
             return {
+                  config: {
+                        filter: "",
+                  },
                   roteadores: [],
                   currentSort: 'name',
                   currentSortDir: 'asc',
@@ -59,9 +84,20 @@ export default {
                               field: 'observacao',
                               sortable: true
                         },
+                        {
+                              name: 'reincidencia',
+                              required: true,
+                              label: 'Reincidencias',
+                              align: 'left',
+                              field: 'reincidencia',
+                              sortable: true
+                        },
+                        { name: "actions" },
                   ],
                   pagination: {
-                        rowsPerPage: 7
+                        rowsPerPage: 10,
+                        sortBy: "date",
+                        descending: true,
                   }
             }
       },
@@ -136,6 +172,8 @@ export default {
                   return _.orderBy(this.roteadores, this.colunaSort, this.colunaOrder)
             },
             filteredItems() {
+                  const filter = this.config.filter.toLowerCase();
+                  console.log("Oi", filter)
                   let roteadores = [];
                   roteadores = this.roteadores.filter((router) => {
                         return (
@@ -144,6 +182,23 @@ export default {
                   });
                   return roteadores;
             },
+            ListaRoteadores() {
+			const filter = this.config.filter.toLowerCase();
+			return this.roteadores.filter((roteador) => {
+				if (this.reincidencia == undefined) {
+					return (
+						roteador.pppoe.match(filter) ||
+                                    roteador.mac.match(filter) ||
+                                    roteador.mac.toLowerCase().match(filter) ||
+                                    roteador.date.match(filter)
+					);
+				} else {
+					return (
+						(roteador.pppoe.match(filter)
+					));
+				}
+			}).slice(0, 100);
+		},
       }
 }
 </script>

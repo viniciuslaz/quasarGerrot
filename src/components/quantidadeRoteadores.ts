@@ -20,13 +20,8 @@ var datacom = 0;
 var huawei = 0;
 var outros = 0;
 
-var valorHuawei = 0;
-var valorDatacom = 0;
-var valorTplink = 0;
-var valorOutros = 0;
-
 export default defineComponent({
-  name: "DoughnutChart",
+  name: "QuantidadeRoteadores",
   components: {
     Doughnut,
   },
@@ -73,7 +68,7 @@ export default defineComponent({
           {
             label: "Valor roteadores",
             backgroundColor: ["#2b4c7e", "#567ebb", "#606d80", "#dce0e6"],
-            data: [valorTplink, valorHuawei, valorDatacom, valorOutros],
+            data: [tplink, huawei, datacom, outros],
           },
         ],
       };
@@ -112,27 +107,12 @@ export default defineComponent({
         });
     }
 
-    function calculaValores() {
-      valorHuawei = huawei * 300;
-      valorTplink = tplink * 250;
-      valorDatacom = datacom * 250;
-      valorOutros = outros * 200;
-    }
-
     onMounted(() => {
       tplink = 0;
       datacom = 0;
       huawei = 0;
       outros = 0;
-
-      valorHuawei = 0;
-      valorDatacom = 0;
-      valorTplink = 0;
-      valorOutros = 0;
       pegaRoteadores();
-      setTimeout(() => {
-        calculaValores();
-      }, 2000);
       setTimeout(() => {
         fillData();
       }, 2000);

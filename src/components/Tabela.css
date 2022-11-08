@@ -17,4 +17,8 @@
 
 .q-table > tbody > tr > td{
       border: none !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 20px !important;
 }
