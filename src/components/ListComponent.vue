@@ -44,7 +44,7 @@
 
                   <form @submit.prevent.stop="validaInformacoes" @reset.prevent.stop="onReset" class="q-gutter-md">
                         <q-input outlined class="q-mb-md" v-model="mac" label="Mac:" type="text"
-                              mask="XX:XX:XX:XX:XX:XX" lazy-rules ref="macRef" :rules="regrasMac">
+                              mask="XX:XX:XX:XX:XX:XX">
                               <template v-slot:append>
                                     <q-icon name="close" @click="mac = ''" class="cursor-pointer" />
                               </template>
@@ -75,6 +75,7 @@
                   </template>
 
                   <template v-slot:top-right>
+                        <q-checkbox v-model="checkUmaReincidencias" label="1 reincidencias" class="q-mr-lg" />
                         <q-checkbox v-model="checkDuasReincidencias" label="2 reincidencias" class="q-mr-lg" />
                         <q-checkbox v-model="checkTresReincidencias" label="3 reincidencias" class="q-mr-lg" />
                         <q-input rounded color="grey" dense debounce="300" v-model="config.filter" placeholder="Busca">
@@ -182,6 +183,7 @@ export default {
                   pppoe: ref(''),
                   observacao: ref(''),
                   reincidencia: ref(''),
+                  checkUmaReincidencias: ref(false),
                   checkDuasReincidencias: ref(false),
                   checkTresReincidencias: ref(false),
             }
@@ -196,7 +198,6 @@ export default {
       },
       methods: {
             validaInformacoes() {
-                  console.log(this.mac.length)
                   if (this.mac.length != 17) {
                         $q.notify({
                               type: 'warning',
@@ -206,6 +207,11 @@ export default {
                         $q.notify({
                               type: 'warning',
                               message: 'PPPoE não possui 8 caracteres!'
+                        })
+                  } else if (this.observacao.length <= 30 || this.observacao == null || this.observacao == "") {
+                        $q.notify({
+                              type: 'warning',
+                              message: 'Insira uma descrição detalhada de 30 caracteres!'
                         })
                   }
                   else {
@@ -311,17 +317,23 @@ export default {
                                           observacao: '',
                                           reincidencia: ''
                                     }
-                                    cadastrar = false;
+                                    this.limpaVariaveis();
+                                    this.cadastrar = false;
                                     $q.notify({
                                           icon: 'done',
                                           color: 'positive',
                                           message: 'Roteador cadastrado'
                                     })
+                                    this.ListaRoteadores();                                    
                               }).catch(error => {
                                     console.log(error);
                               })
                         } else {
-                              alert("O roteador já está cadastrado! O número de reincidências foi aumentado!")
+                              let editaObservacao = "";
+                              let observacaoNova = this.observacao;
+                              let observacaoRegistrada = res.data.observacao;
+                              editaObservacao = "1 - " + observacaoRegistrada + ". 2 - " + observacaoNova;
+                              res.data.observacao = editaObservacao;
                               axios.put(apiURL + 'save-roteador', res).then(() => {
                                     roteador = {
                                           mac: '',
@@ -331,6 +343,14 @@ export default {
                                           observacao: '',
                                           reincidencia: ''
                                     }
+                                    this.limpaVariaveis();
+                                    this.cadastrar = false;
+                                    $q.notify({
+                                          icon: 'done',
+                                          color: 'positive',
+                                          message: 'O roteador já está cadastrado! O número de reincidências foi aumentado!'
+                                    })
+                                    this.ListaRoteadores();
                               })
                         }
                   }).catch(error => {
@@ -341,25 +361,33 @@ export default {
       computed: {
             ListaRoteadores() {
                   const filter = this.config.filter.toLowerCase();
+                  const checkUmaReincidencia = this.checkUmaReincidencias;
                   const checkDuasReincidencia = this.checkDuasReincidencias;
                   const checkTresReincidencia = this.checkTresReincidencias;
                   return this.roteadores.filter((roteador) => {
-                        if (checkDuasReincidencia == true) {
+                        if (checkUmaReincidencia == true) {
                               return (
-                                    roteador.reincidencia.match(2)
-                              );
+                                    (roteador.reincidencia.match(1) &&
+                                          roteador.pppoe.match(filter)
+                                    ));
+                        } else if (checkDuasReincidencia == true) {
+                              return ((
+                                    roteador.reincidencia.match(2) &&
+                                    roteador.pppoe.match(filter)
+                              ));
                         } else if (checkTresReincidencia == true) {
-                              return (
-                                    roteador.reincidencia.match(3)
-                              );
-                        }else {
+                              return ((
+                                    roteador.reincidencia.match(3) &&
+                                    roteador.pppoe.match(filter)
+                              ));
+                        } else {
                               return (
                                     (roteador.pppoe.match(filter) ||
-                                    roteador.mac.match(filter) ||
-                                    roteador.date.match(filter)
+                                          roteador.mac.match(filter) ||
+                                          roteador.date.match(filter)
                                     ));
                         }
-                  }).slice(0, 100);
+                  }).slice(0, 300);
             },
       }
 }
