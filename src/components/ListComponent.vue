@@ -42,36 +42,42 @@
             <q-card class="q-pa-sm" style="width: 400px">
                   <div class="tituloEditaRoteador">Cadastrar roteador:</div>
 
-                  <q-input outlined class="q-mb-md" v-model="mac" label="Mac:" required minlength="12" v-maska="'XX:XX:XX:XX:XX:XX'">
-                        <template v-slot:append>
-                              <q-icon name="close" @click="mac = ''" class="cursor-pointer" />
-                        </template>
-                  </q-input>
-                  <q-input outlined class="q-mb-md" v-model="pppoe" label="PPPoE:">
-                        <template v-slot:append>
-                              <q-icon name="close" @click="pppoe = ''" class="cursor-pointer" />
-                        </template>
-                  </q-input>
-                  <q-input v-model="dataHoje" class="q-mb-md" outlined label="Data:" disable />
+                  <form @submit.prevent.stop="validaInformacoes" @reset.prevent.stop="onReset" class="q-gutter-md">
+                        <q-input outlined class="q-mb-md" v-model="mac" label="Mac:" type="text"
+                              mask="XX:XX:XX:XX:XX:XX" lazy-rules ref="macRef" :rules="regrasMac">
+                              <template v-slot:append>
+                                    <q-icon name="close" @click="mac = ''" class="cursor-pointer" />
+                              </template>
+                        </q-input>
+                        <q-input outlined class="q-mb-md" v-model="pppoe" label="PPPoE:" type="text">
+                              <template v-slot:append>
+                                    <q-icon name="close" @click="pppoe = ''" class="cursor-pointer" />
+                              </template>
+                        </q-input>
+                        <q-input v-model="dataHoje" class="q-mb-md" outlined label="Data:" disable />
 
-                  <q-input v-model="observacao" outlined autogrow label="Obs:" />
+                        <q-input v-model="observacao" outlined autogrow label="Obs:" type="text" />
 
-                  <q-card-actions align="right" class="bg-white text-teal">
-                        <q-btn flat label="CADASTRAR" color="primary" v-close-popup @click="cadastrarRoteador()" />
-                        <q-btn flat label="Cancelar" color="red" v-close-popup />
-                  </q-card-actions>
+                        <q-card-actions align="right" class="bg-white text-teal">
+                              <q-btn flat label="CADASTRAR" color="primary" type="submit" />
+                              <q-btn flat label="Cancelar" color="red" v-close-popup />
+                        </q-card-actions>
+                  </form>
             </q-card>
       </q-dialog>
 
       <div class="q-pa-md tabela">
-            <q-table :rows="ListaRoteadores" :columns="columns" v-model:pagination="pagination" row-key="name">
+            <q-table :rows="ListaRoteadores" :columns="columns" v-model:pagination="pagination" row-key="name"
+                  no-data-label="Nenhum resultado encontrado">
                   <template v-slot:top-left>
                         <p class="tituloTabela">Lista de roteadores</p>
                         <q-space />
                   </template>
 
                   <template v-slot:top-right>
-                        <q-input borderless dense debounce="300" v-model="config.filter" placeholder="Busca">
+                        <q-checkbox v-model="checkDuasReincidencias" label="2 reincidencias" class="q-mr-lg" />
+                        <q-checkbox v-model="checkTresReincidencias" label="3 reincidencias" class="q-mr-lg" />
+                        <q-input rounded color="grey" dense debounce="300" v-model="config.filter" placeholder="Busca">
                               <template v-slot:append>
                                     <q-icon name="search" />
                               </template>
@@ -96,8 +102,8 @@
 import axios from "axios";
 import { ref } from 'vue'
 import _ from "lodash";
-var imagem;
-var classe;
+import { useQuasar } from 'quasar';
+let $q;
 
 export default {
       props: {
@@ -106,7 +112,7 @@ export default {
       data() {
             return {
                   config: {
-                        filter: "",
+                        filter: ""
                   },
                   roteadores: [],
                   currentSort: 'name',
@@ -147,6 +153,14 @@ export default {
                               field: 'observacao',
                               sortable: true
                         },
+                        {
+                              name: 'reincidencias',
+                              required: true,
+                              label: 'Reincidencias',
+                              align: 'left',
+                              field: 'reincidencia',
+                              sortable: true
+                        },
                         { name: "actions" },
                   ],
                   pagination: {
@@ -168,6 +182,8 @@ export default {
                   pppoe: ref(''),
                   observacao: ref(''),
                   reincidencia: ref(''),
+                  checkDuasReincidencias: ref(false),
+                  checkTresReincidencias: ref(false),
             }
       },
       created() {
@@ -175,7 +191,27 @@ export default {
             this.pegaDataHoje();
 
       },
+      mounted() {
+            $q = useQuasar();
+      },
       methods: {
+            validaInformacoes() {
+                  console.log(this.mac.length)
+                  if (this.mac.length != 17) {
+                        $q.notify({
+                              type: 'warning',
+                              message: 'MAC está incompleto!'
+                        })
+                  } else if (this.pppoe.length < 8 || this.pppoe == null || this.pppoe == "") {
+                        $q.notify({
+                              type: 'warning',
+                              message: 'PPPoE não possui 8 caracteres!'
+                        })
+                  }
+                  else {
+                        this.cadastrarRoteador()
+                  }
+            },
             pegaDataHoje() {
                   let hoje = new Date()
                   this.dataHoje = hoje.toLocaleDateString('pt-BR', {
@@ -275,6 +311,12 @@ export default {
                                           observacao: '',
                                           reincidencia: ''
                                     }
+                                    cadastrar = false;
+                                    $q.notify({
+                                          icon: 'done',
+                                          color: 'positive',
+                                          message: 'Roteador cadastrado'
+                                    })
                               }).catch(error => {
                                     console.log(error);
                               })
@@ -299,17 +341,22 @@ export default {
       computed: {
             ListaRoteadores() {
                   const filter = this.config.filter.toLowerCase();
+                  const checkDuasReincidencia = this.checkDuasReincidencias;
+                  const checkTresReincidencia = this.checkTresReincidencias;
                   return this.roteadores.filter((roteador) => {
-                        if (this.reincidencia == undefined) {
+                        if (checkDuasReincidencia == true) {
                               return (
-                                    roteador.pppoe.match(filter) ||
-                                    roteador.mac.match(filter) ||
-                                    roteador.mac.toLowerCase().match(filter) ||
-                                    roteador.date.match(filter)
+                                    roteador.reincidencia.match(2)
                               );
-                        } else {
+                        } else if (checkTresReincidencia == true) {
                               return (
-                                    (roteador.pppoe.match(filter)
+                                    roteador.reincidencia.match(3)
+                              );
+                        }else {
+                              return (
+                                    (roteador.pppoe.match(filter) ||
+                                    roteador.mac.match(filter) ||
+                                    roteador.date.match(filter)
                                     ));
                         }
                   }).slice(0, 100);
