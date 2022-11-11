@@ -1,29 +1,37 @@
-.q-table__container{
+.q-table {
+      box-sizing: initial;
+      border-spacing: 0px 10px !important;
+      border-radius: 10px !important;
+      padding: 0px 5px ;
+      border-collapse: separate;
+}
+
+.q-table__container {
       background-color: #dce0e6 !important;
 }
 
-.tituloTabela{
+.tituloTabela {
       font-size: 22px;
       font-weight: 600;
 }
 
-.q-table{
-      padding: 0 10px;
-}
-
-.q-table > tbody > tr {
+.q-table>tbody>tr {
       background-color: white;
 }
 
-.q-table > tbody > tr > td{
-      border: none !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      max-width: 205px !important;
+.tituloEditaRoteador {
+      font-size: 20px;
+      margin: 0 0 10px 2px;
 }
 
-.tituloEditaRoteador{
-      font-size: 20px;
-      margin: 0 0 30px 2px;
+.q-table td:first-child {
+      border-left-style: solid;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+}
+
+.q-table td:last-child {
+      border-right-style: solid;
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
 }

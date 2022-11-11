@@ -152,6 +152,7 @@ export default {
                               label: 'Observacao',
                               align: 'left',
                               field: 'observacao',
+                              field: (row) => row.observacao.substring(0, 40),
                               sortable: true
                         },
                         {
@@ -162,7 +163,10 @@ export default {
                               field: 'reincidencia',
                               sortable: true
                         },
-                        { name: "actions" },
+                        { 
+                              name: "actions",
+                              align: "center"
+                        },
                   ],
                   pagination: {
                         rowsPerPage: 10,
