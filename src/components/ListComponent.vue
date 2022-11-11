@@ -66,7 +66,17 @@
             </q-card>
       </q-dialog>
 
-      <div class="q-pa-md tabela">
+      <div class="busca">
+            <div class="campoBusca">
+                  <q-input outlined color="grey" dense v-model="config.filter" placeholder="Busca">
+                        <template v-slot:append>
+                              <q-icon name="search" />
+                        </template>
+                  </q-input>
+            </div>
+      </div>
+
+      <div class="tabela">
             <q-table :rows="ListaRoteadores" :columns="columns" v-model:pagination="pagination" row-key="name"
                   no-data-label="Nenhum resultado encontrado">
                   <template v-slot:top-left>
@@ -78,23 +88,20 @@
                         <q-checkbox v-model="checkUmaReincidencias" label="1 reincidencias" class="q-mr-lg" />
                         <q-checkbox v-model="checkDuasReincidencias" label="2 reincidencias" class="q-mr-lg" />
                         <q-checkbox v-model="checkTresReincidencias" label="3 reincidencias" class="q-mr-lg" />
-                        <q-input rounded color="grey" dense debounce="300" v-model="config.filter" placeholder="Busca">
-                              <template v-slot:append>
-                                    <q-icon name="search" />
-                              </template>
-                        </q-input>
+
                         <q-btn icon-right="fa-regular fa-add" class="q-ml-xs" flat @click="cadastrar = true"></q-btn>
                   </template>
 
                   <template v-slot:body-cell-actions="props">
                         <q-td :props="props">
-                              <q-btn icon="fa-solid fa-pencil" size="xs" color="primary" @click="editarRoteador(props)"
-                                    class="q-mr-xs" />
-                              <q-btn icon="fa-solid fa-trash" size="xs" color="red" @click="pegaIdDeletar(props)">
-                              </q-btn>
+                              <a @click="editarRoteador(props)" class="q-mr-xs q-pa-xs iconesTabela">
+                                    <q-icon name="fa-solid fa-pencil" />
+                              </a>
+                              <a @click="pegaIdDeletar(props)" class="q-pa-xs iconesTabela">
+                                    <q-icon name="fa-solid fa-trash" />
+                              </a>
                         </q-td>
                   </template>
-
             </q-table>
       </div>
 </template>
@@ -105,6 +112,15 @@ import { ref } from 'vue'
 import _ from "lodash";
 import { useQuasar } from 'quasar';
 let $q;
+
+
+import huawei from "../assets/huawei.png";
+import parks from "../assets/parks.png";
+import tplink from "../assets/tplink-g5.png";
+import xpon from "../assets/xpon.png";
+import datacom from "../assets/datacom.png";
+import naoencontrado from "../assets/nenhum.png";
+var imagem;
 
 export default {
       props: {
@@ -122,13 +138,18 @@ export default {
                   dataHoje: '',
                   columns: [
                         {
+                              name: 'modelo',
+                              required: true,
+                              field: (row) => this.pegarModelo(row.modelo),
+                              align: 'left',
+                        },
+                        {
                               name: 'pppoe',
                               required: true,
                               label: 'PPPoE',
                               field: 'pppoe',
                               align: 'left',
                               sortable: true,
-                              class: 'rowTeste'
                         },
                         {
                               name: 'mac',
@@ -147,15 +168,6 @@ export default {
                               sortable: true
                         },
                         {
-                              name: 'observacao',
-                              required: true,
-                              label: 'Observacao',
-                              align: 'left',
-                              field: 'observacao',
-                              field: (row) => row.observacao.substring(0, 40),
-                              sortable: true
-                        },
-                        {
                               name: 'reincidencias',
                               required: true,
                               label: 'Reincidencias',
@@ -163,13 +175,13 @@ export default {
                               field: 'reincidencia',
                               sortable: true
                         },
-                        { 
+                        {
                               name: "actions",
                               align: "center"
                         },
                   ],
                   pagination: {
-                        rowsPerPage: 10,
+                        rowsPerPage: 7,
                         sortBy: "date",
                         descending: true,
                   }
@@ -252,6 +264,31 @@ export default {
                   this.idRoteador = props.row._id;
                   this.confirm = true;
             },
+            pegarModelo(modelo) {
+                  switch (modelo) {
+                        case 'tplink':
+                              imagem = tplink;
+                              var img = document.createElement('div');
+                              document.body.appendChild(img)
+                              img.innerHTML = "<img src='./src/assets/tplink-g5.png'></img>";
+                              return
+                        case 'huawei':
+                              imagem = huawei;
+                              return imagem;
+                        case 'parks':
+                              imagem = parks;
+                              return imagem;
+                        case 'xpon':
+                              imagem = xpon;
+                              return imagem;
+                        case 'datacom':
+                              imagem = datacom;
+                              return imagem;
+                        default:
+                              imagem = naoencontrado;
+                              return imagem;
+                  }
+            },
             deletarRoteador() {
                   let id = this.idRoteador;
                   let apiURL = import.meta.env.VITE_APIURL + `delete-roteador/${id}`;
@@ -328,7 +365,7 @@ export default {
                                           color: 'positive',
                                           message: 'Roteador cadastrado'
                                     })
-                                    this.ListaRoteadores();                                    
+                                    this.ListaRoteadores();
                               }).catch(error => {
                                     console.log(error);
                               })
@@ -391,7 +428,7 @@ export default {
                                           roteador.date.match(filter)
                                     ));
                         }
-                  }).slice(0, 300);
+                  }).slice(0, 200);
             },
       }
 }

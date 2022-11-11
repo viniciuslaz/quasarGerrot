@@ -1,5 +1,5 @@
 <template>
-	<q-layout view="lhr lpR fFf">
+	<q-layout view="lhr lpR fFf" class="bgBrancoEscuro">
 
 		<q-drawer show-if-above v-model="leftDrawerOpen" class="bgBrancoEscuro" side="left" elevated>
 			<div class="topoNavbar flex justify-center align-center q-py-md">
@@ -25,7 +25,7 @@
 
 						<q-item-section>Listar</q-item-section>
 					</q-item>
-					
+
 					<q-item clickable to="/dashboard" :active="link === 'inbox'" @click="link = 'inbox'"
 						active-class="my-menu-link" class="q-px-xl">
 						<q-item-section avatar>
@@ -81,5 +81,15 @@ export default {
 	--azul-claro: #567ebb;
 	--cinza-escuro: #606d80;
 	--branco-claro: #dce0e6;
+	--branco-diferente: #e9eef3;
+}
+
+.corIcone{
+	color: var(--cinza-escuro);
+}
+
+.searchColor{
+	background-color: white !important;
+	
 }
 </style>
