@@ -2,7 +2,7 @@
       <q-dialog v-model="confirm">
             <q-card>
                   <q-card-section class="row items-center">
-                        <span class="q-ml-sm">Tem certeza que deseja deletar o roteador?</span>
+                        <span>Tem certeza que deseja deletar o roteador?</span>
                   </q-card-section>
 
                   <q-card-actions align="right" :props="props">
@@ -32,7 +32,7 @@
                   <q-input v-model="observacao" outlined autogrow label="Obs:" />
 
                   <q-card-actions align="right" class="bg-white text-teal">
-                        <q-btn flat label="ATUALIZAR" color="primary" v-close-popup @click="atualizaRoteador()" />
+                        <q-btn flat label="ATUALIZAR" color="primary" @click="validaInformacoes(true)" />
                         <q-btn flat label="Cancelar" color="red" v-close-popup @click="limpaVariaveis()" />
                   </q-card-actions>
             </q-card>
@@ -89,19 +89,38 @@
                         <q-checkbox v-model="checkDuasReincidencias" label="2 reincidencias" class="q-mr-lg" />
                         <q-checkbox v-model="checkTresReincidencias" label="3 reincidencias" class="q-mr-lg" />
 
-                        <q-btn icon-right="fa-regular fa-add" class="q-ml-xs" flat @click="cadastrar = true"></q-btn>
+                        <button class="botaoCadastrar" @click="cadastrar = true">CADASTRAR</button>
+                  </template>
+
+                  <template v-slot:body-cell-modelo="props">
+                        <q-td :props="props">
+                              <img v-if="props.row.modelo == 'tplink'" src="../assets/tplink-g5.png" alt="TpLink"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'huawei'" src="../assets/huawei.png" alt="Huawei"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'datacom'" src="../assets/datacom.png" alt="Datacom"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'parks'" src="../assets/parks.png" alt="Parks"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'xpon'" src="../assets/xpon.png" alt="Xpon"
+                                    class="modeloRoteador">
+                              <img v-else="props.row.modelo == 'nenhum'" src="../assets/nenhum.png" alt="Huawei"
+                                    class="modeloRoteador">
+                        </q-td>
                   </template>
 
                   <template v-slot:body-cell-actions="props">
                         <q-td :props="props">
-                              <a @click="editarRoteador(props)" class="q-mr-xs q-pa-xs iconesTabela">
+                              <a @click="editarRoteador(props)" class="q-mr-md iconesTabela">
                                     <q-icon name="fa-solid fa-pencil" />
                               </a>
-                              <a @click="pegaIdDeletar(props)" class="q-pa-xs iconesTabela">
+                              <a @click="pegaIdDeletar(props)" class="iconesTabela">
                                     <q-icon name="fa-solid fa-trash" />
                               </a>
                         </q-td>
                   </template>
+
+
             </q-table>
       </div>
 </template>
@@ -112,15 +131,6 @@ import { ref } from 'vue'
 import _ from "lodash";
 import { useQuasar } from 'quasar';
 let $q;
-
-
-import huawei from "../assets/huawei.png";
-import parks from "../assets/parks.png";
-import tplink from "../assets/tplink-g5.png";
-import xpon from "../assets/xpon.png";
-import datacom from "../assets/datacom.png";
-import naoencontrado from "../assets/nenhum.png";
-var imagem;
 
 export default {
       props: {
@@ -138,10 +148,11 @@ export default {
                   dataHoje: '',
                   columns: [
                         {
-                              name: 'modelo',
-                              required: true,
-                              field: (row) => this.pegarModelo(row.modelo),
-                              align: 'left',
+                              name: "modelo",
+                              label: "Modelo",
+                              field: "modelo",
+                              sortable: true,
+                              align: 'center',
                         },
                         {
                               name: 'pppoe',
@@ -213,25 +224,47 @@ export default {
             $q = useQuasar();
       },
       methods: {
-            validaInformacoes() {
-                  if (this.mac.length != 17) {
-                        $q.notify({
-                              type: 'warning',
-                              message: 'MAC está incompleto!'
-                        })
-                  } else if (this.pppoe.length < 8 || this.pppoe == null || this.pppoe == "") {
-                        $q.notify({
-                              type: 'warning',
-                              message: 'PPPoE não possui 8 caracteres!'
-                        })
-                  } else if (this.observacao.length <= 30 || this.observacao == null || this.observacao == "") {
-                        $q.notify({
-                              type: 'warning',
-                              message: 'Insira uma descrição detalhada de 30 caracteres!'
-                        })
-                  }
-                  else {
-                        this.cadastrarRoteador()
+            validaInformacoes(editado) {
+                  if (editado == true) {
+                        if (this.mac.length != 17) {
+                              $q.notify({
+                                    type: 'warning',
+                                    message: 'MAC está incompleto!'
+                              })
+                        } else if (this.pppoe.length < 8 || this.pppoe == null || this.pppoe == "") {
+                              $q.notify({
+                                    type: 'warning',
+                                    message: 'PPPoE não possui 8 caracteres!'
+                              })
+                        } else if (this.observacao.length <= 30 || this.observacao == null || this.observacao == "") {
+                              $q.notify({
+                                    type: 'warning',
+                                    message: 'Insira uma descrição detalhada de 30 caracteres!'
+                              })
+                        }
+                        else {
+                              this.atualizaRoteador()
+                        }
+                  } else {
+                        if (this.mac.length != 17) {
+                              $q.notify({
+                                    type: 'warning',
+                                    message: 'MAC está incompleto!'
+                              })
+                        } else if (this.pppoe.length < 8 || this.pppoe == null || this.pppoe == "") {
+                              $q.notify({
+                                    type: 'warning',
+                                    message: 'PPPoE não possui 8 caracteres!'
+                              })
+                        } else if (this.observacao.length <= 30 || this.observacao == null || this.observacao == "") {
+                              $q.notify({
+                                    type: 'warning',
+                                    message: 'Insira uma descrição detalhada de 30 caracteres!'
+                              })
+                        }
+                        else {
+                              this.cadastrarRoteador()
+                        }
                   }
             },
             pegaDataHoje() {
@@ -264,31 +297,6 @@ export default {
                   this.idRoteador = props.row._id;
                   this.confirm = true;
             },
-            pegarModelo(modelo) {
-                  switch (modelo) {
-                        case 'tplink':
-                              imagem = tplink;
-                              var img = document.createElement('div');
-                              document.body.appendChild(img)
-                              img.innerHTML = "<img src='./src/assets/tplink-g5.png'></img>";
-                              return
-                        case 'huawei':
-                              imagem = huawei;
-                              return imagem;
-                        case 'parks':
-                              imagem = parks;
-                              return imagem;
-                        case 'xpon':
-                              imagem = xpon;
-                              return imagem;
-                        case 'datacom':
-                              imagem = datacom;
-                              return imagem;
-                        default:
-                              imagem = naoencontrado;
-                              return imagem;
-                  }
-            },
             deletarRoteador() {
                   let id = this.idRoteador;
                   let apiURL = import.meta.env.VITE_APIURL + `delete-roteador/${id}`;
@@ -298,6 +306,11 @@ export default {
                   axios.delete(apiURL).then(() => {
                         this.roteadores.splice(indexOfArrayItem, 1);
                         this.limpaVariaveis();
+                        $q.notify({
+                              icon: 'done',
+                              color: 'negative',
+                              message: 'Roteador removido'
+                        })
                   }).catch(error => {
                         console.log(error)
                   })
@@ -326,6 +339,12 @@ export default {
 
                   axios.put(apiURL, roteador).then(() => {
                         this.limpaVariaveis();
+                        this.medium = false;
+                        $q.notify({
+                              icon: 'done',
+                              color: 'positive',
+                              message: 'Informações atualizadas'
+                        })
                   }).catch(error => {
                         console.log(error)
                   })

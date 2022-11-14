@@ -1,18 +1,19 @@
 import { defineComponent, ref, h, onMounted, PropType } from "vue";
-import { Doughnut } from "vue-chartjs";
+import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
   Title,
   Tooltip,
   Legend,
-  ArcElement,
+  BarElement,
   CategoryScale,
   Plugin,
   ChartData,
+  LinearScale
 } from "chart.js";
 import axios from "axios";
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 var roteadores = [];
 var tplink = 0;
@@ -23,12 +24,12 @@ var outros = 0;
 export default defineComponent({
   name: "QuantidadeRoteadores",
   components: {
-    Doughnut,
+    Bar,
   },
   props: {
     chartId: {
       type: String,
-      default: "doughnut-chart",
+      default: "Bar-chart",
     },
     width: {
       type: Number,
@@ -66,7 +67,7 @@ export default defineComponent({
         labels: ["TPLINK", "HUAWEI", "DATACOM", "OUTROS"],
         datasets: [
           {
-            label: "Valor roteadores",
+            label: "Roteadores",
             backgroundColor: ["#2b4c7e", "#567ebb", "#606d80", "#dce0e6"],
             data: [tplink, huawei, datacom, outros],
           },
@@ -119,7 +120,7 @@ export default defineComponent({
     });
 
     return () =>
-      h(Doughnut, {
+      h(Bar, {
         chartData: chartData.value,
         chartOptions,
         chartId: props.chartId,

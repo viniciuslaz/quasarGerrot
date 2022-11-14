@@ -41,7 +41,8 @@ export default {
       },
       methods: {
             sendEmail(e) {
-                  try {
+                  console,log(e)
+                  /*try {
                         emailjs.sendForm('service_m27ry6z', 'template_xmu6hgr', e.target, 'ZV68rj9MTV1-ZICUm', {
                               name: this.name,
                               email: this.email,
@@ -53,7 +54,7 @@ export default {
                   // Reset form field
                   this.name = ''
                   this.email = ''
-                  this.message = ''
+                  this.message = ''*/
             },
       }
 }

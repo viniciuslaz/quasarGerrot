@@ -7,7 +7,7 @@
 }
 
 .q-table__container {
-      background-color: var(--branco-diferente) !important;
+      background-color: var(--branco-claro) !important;
       box-shadow: none !important;
 }
 
@@ -52,6 +52,27 @@
 }
 
 .iconesTabela{
-      font-size: 16px;
-      color: var(--branco-claro);
+      font-size: 20px;
+      color: var(--azul-claro);
+}
+
+.iconesTabela:hover{
+      cursor: pointer;
+}
+
+.botaoCadastrar{
+      background-color: #193f79;
+      border: none;
+      padding: 10px 12px;
+      color: white;
+      border-radius: 8px;
+}
+
+.botaoCadastrar:hover{
+      cursor: pointer;
+}
+
+.modeloRoteador{
+      width: 45px; 
+      height: 45px;
 }
