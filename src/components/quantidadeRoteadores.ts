@@ -116,7 +116,7 @@ export default defineComponent({
       pegaRoteadores();
       setTimeout(() => {
         fillData();
-      }, 2000);
+      }, 1000);
     });
 
     return () =>

@@ -132,10 +132,10 @@ export default defineComponent({
       pegaRoteadores();
       setTimeout(() => {
         calculaValores();
-      }, 2000);
+      }, 1000);
       setTimeout(() => {
         fillData();
-      }, 2000);
+      }, 1000);
     });
 
     return () =>

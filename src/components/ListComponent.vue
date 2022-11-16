@@ -192,7 +192,7 @@ export default {
                         },
                   ],
                   pagination: {
-                        rowsPerPage: 7,
+                        rowsPerPage: 6,
                         sortBy: "date",
                         descending: true,
                   }
@@ -420,7 +420,7 @@ export default {
       },
       computed: {
             ListaRoteadores() {
-                  const filter = this.config.filter.toLowerCase();
+                  const filter = this.config.filter;
                   const checkUmaReincidencia = this.checkUmaReincidencias;
                   const checkDuasReincidencia = this.checkDuasReincidencias;
                   const checkTresReincidencia = this.checkTresReincidencias;
