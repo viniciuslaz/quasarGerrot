@@ -85,9 +85,31 @@
                   </template>
 
                   <template v-slot:top-right>
-                        <q-checkbox v-model="checkUmaReincidencias" label="1 reincidencias" class="q-mr-lg" />
-                        <q-checkbox v-model="checkDuasReincidencias" label="2 reincidencias" class="q-mr-lg" />
-                        <q-checkbox v-model="checkTresReincidencias" label="3 reincidencias" class="q-mr-lg" />
+
+                        <q-btn-dropdown class="botaoCadastrar q-mr-sm" label="Filtrar">
+                              <q-list>
+                                    <q-item clickable v-close-popup>
+                                          <q-item-section>
+                                                <q-toggle v-model="checkUmaReincidencias" label="1 reincidencia"
+                                                      class="q-mr-md" />
+                                          </q-item-section>
+                                    </q-item>
+
+                                    <q-item clickable v-close-popup>
+                                          <q-item-section>
+                                                <q-toggle v-model="checkDuasReincidencias" label="2 reincidencias"
+                                                      class="q-mr-md" />
+                                          </q-item-section>
+                                    </q-item>
+
+                                    <q-item clickable v-close-popup>
+                                          <q-item-section>
+                                                <q-toggle v-model="checkTresReincidencias" label="3 reincidencias"
+                                                      class="q-mr-md" />
+                                          </q-item-section>
+                                    </q-item>
+                              </q-list>
+                        </q-btn-dropdown>
 
                         <button class="botaoCadastrar" @click="cadastrar = true">CADASTRAR</button>
                   </template>
@@ -104,8 +126,38 @@
                                     class="modeloRoteador">
                               <img v-else-if="props.row.modelo == 'xpon'" src="../assets/xpon.png" alt="Xpon"
                                     class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'cianet'" src="../assets/cianet.png" alt="Cianet"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'eb01'" src="../assets/eb01.png" alt="Eb01"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'fiberhome'" src="../assets/fiberhome.png" alt="Fiberhome"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'intelbras'" src="../assets/intelbras.png" alt="Intelbras"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'multilaser'" src="../assets/multilaser.png" alt="Multilaser"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'zterouter'" src="../assets/zterouter.png" alt="Zte router"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'zte'" src="../assets/zte.png" alt="Zte router"
+                                    class="modeloRoteador">
                               <img v-else="props.row.modelo == 'nenhum'" src="../assets/nenhum.png" alt="Huawei"
                                     class="modeloRoteador">
+                        </q-td>
+                  </template>
+
+                  <template v-slot:body-cell-reincidencia="props">
+                        <q-td :props="props">
+                              <q-badge v-if="props.row.reincidencia == 1" transparent align="middle" color="green" class="q-pa-xs">
+                                    1 - Reincidencia(s)
+                              </q-badge>
+                              <q-badge v-else-if="props.row.reincidencia == 2" transparent align="middle"
+                                    color="orange" class="q-pa-xs">
+                                    2 - Reincidencia(s)
+                              </q-badge>
+                              <q-badge v-else-if="props.row.reincidencia == 3" transparent align="middle"
+                                    color="red" class="q-pa-xs">
+                                    3 - Reincidencia(s)
+                              </q-badge>
                         </q-td>
                   </template>
 
@@ -179,7 +231,7 @@ export default {
                               sortable: true
                         },
                         {
-                              name: 'reincidencias',
+                              name: 'reincidencia',
                               required: true,
                               label: 'Reincidencias',
                               align: 'left',

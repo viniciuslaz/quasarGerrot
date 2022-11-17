@@ -61,11 +61,11 @@
 }
 
 .botaoCadastrar{
-      background-color: #193f79;
-      border: none;
+      background-color: #193f79 !important;
+      border: none !important;
       padding: 10px 12px;
-      color: white;
-      border-radius: 8px;
+      color: white !important;
+      border-radius: 8px !important;
 }
 
 .botaoCadastrar:hover{
@@ -75,4 +75,9 @@
 .modeloRoteador{
       width: 45px; 
       height: 45px;
+}
+
+.q-btn{
+      padding: 8px 10px !important;
+      font-weight: 400 !important;
 }

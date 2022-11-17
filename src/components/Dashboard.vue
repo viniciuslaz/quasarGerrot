@@ -3,7 +3,7 @@
 		<div class="row centralizaConteudo">
 			<div class="col-4 fundoGraficos q-mr-md">
 				<p class="tituloGrafico">VALORES GASTOS:</p>
-				<ReactiveChart />
+				<ValorRoteadores />
 			</div>
 			<div class="col-4 fundoGraficos q-ml-5">
 				<p class="tituloGrafico">QUANTIDADE ROTEADORES:</p>
@@ -15,13 +15,13 @@
 </template>
     
 <script>
-import ReactiveChart from './reactiveChart'
+import ValorRoteadores from './valorRoteadores'
 import QuantidadeRoteadores from './quantidadeRoteadores'
 
 export default {
 	name: 'App',
 	components: {
-		ReactiveChart,
+		ValorRoteadores,
 		QuantidadeRoteadores
 	}
 }

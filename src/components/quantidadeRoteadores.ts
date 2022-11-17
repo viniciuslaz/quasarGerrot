@@ -17,6 +17,8 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 var roteadores = [];
 var tplink = 0;
+var intelbras = 0;
+var multilaser = 0;
 var datacom = 0;
 var huawei = 0;
 var outros = 0;
@@ -64,12 +66,12 @@ export default defineComponent({
 
     function fillData() {
       const updatedChartData = {
-        labels: ["TPLINK", "HUAWEI", "DATACOM", "OUTROS"],
+        labels: ["TPLINK", "HUAWEI", "DATACOM", "MULTILASER", "INTELBRAS", "OUTROS"],
         datasets: [
           {
             label: "Roteadores",
-            backgroundColor: ["#2b4c7e", "#567ebb", "#606d80", "#dce0e6"],
-            data: [tplink, huawei, datacom, outros],
+            backgroundColor: ["#2b4c7e", "#567ebb", "#469ebb", "#395ebb", "#606d80", "#dce0e6"],
+            data: [tplink, huawei, datacom, multilaser, intelbras, outros],
           },
         ],
       };
@@ -97,6 +99,14 @@ export default defineComponent({
                 datacom += 1;
                 break;
               }
+              case "multilaser": {
+                multilaser += 1;
+                break;
+              }
+              case "intelbras": {
+                intelbras += 1;
+                break;
+              }
               default: {
                 outros += 1;
               }
@@ -112,6 +122,8 @@ export default defineComponent({
       tplink = 0;
       datacom = 0;
       huawei = 0;
+      multilaser = 0;
+      intelbras = 0;
       outros = 0;
       pegaRoteadores();
       setTimeout(() => {

@@ -18,11 +18,15 @@ var roteadores = [];
 var tplink = 0;
 var datacom = 0;
 var huawei = 0;
+var multilaser = 0;
+var intelbras = 0;
 var outros = 0;
 
 var valorHuawei = 0;
 var valorDatacom = 0;
 var valorTplink = 0;
+var valorMultilaser = 0;
+var valorIntelbras = 0;
 var valorOutros = 0;
 
 export default defineComponent({
@@ -68,12 +72,12 @@ export default defineComponent({
 
     function fillData() {
       const updatedChartData = {
-        labels: ["TPLINK", "HUAWEI", "DATACOM", "OUTROS"],
+        labels: ["TPLINK", "HUAWEI", "DATACOM", "MULTILASER", "INTELBRAS", "OUTROS"],
         datasets: [
           {
             label: "Valor roteadores",
-            backgroundColor: ["#2b4c7e", "#567ebb", "#606d80", "#dce0e6"],
-            data: [valorTplink, valorHuawei, valorDatacom, valorOutros],
+            backgroundColor: ["#2b4c7e", "#567ebb", "#469ebb", "#395ebb", "#606d80", "#dce0e6"],
+            data: [valorTplink, valorHuawei, valorDatacom, valorMultilaser, valorIntelbras, valorOutros],
           },
         ],
       };
@@ -101,6 +105,14 @@ export default defineComponent({
                 datacom += 1;
                 break;
               }
+              case "multilaser": {
+                multilaser += 1;
+                break;
+              }
+              case "intelbras": {
+                intelbras += 1;
+                break;
+              }
               default: {
                 outros += 1;
               }
@@ -116,6 +128,8 @@ export default defineComponent({
       valorHuawei = huawei * 300;
       valorTplink = tplink * 250;
       valorDatacom = datacom * 250;
+      valorMultilaser = multilaser * 200;
+      valorIntelbras = intelbras * 220;
       valorOutros = outros * 200;
     }
 
@@ -123,11 +137,15 @@ export default defineComponent({
       tplink = 0;
       datacom = 0;
       huawei = 0;
+      multilaser = 0;
+      intelbras = 0;
       outros = 0;
 
       valorHuawei = 0;
       valorDatacom = 0;
       valorTplink = 0;
+      valorMultilaser = 0;
+      valorIntelbras = 0;
       valorOutros = 0;
       pegaRoteadores();
       setTimeout(() => {
