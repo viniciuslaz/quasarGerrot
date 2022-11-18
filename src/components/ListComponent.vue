@@ -12,7 +12,7 @@
             </q-card>
       </q-dialog>
 
-      <q-dialog v-model="medium" persistent transition-show="scale" transition-hide="scale">
+      <q-dialog v-model="editar" persistent transition-show="scale" transition-hide="scale" class="prioridade">
             <q-card class="q-pa-sm" style="width: 400px">
                   <div class="tituloEditaRoteador">Editar roteador:</div>
 
@@ -33,7 +33,28 @@
 
                   <q-card-actions align="right" class="bg-white text-teal">
                         <q-btn flat label="ATUALIZAR" color="primary" @click="validaInformacoes(true)" />
-                        <q-btn flat label="Cancelar" color="red" v-close-popup @click="limpaVariaveis()" />
+                        <q-btn flat label="Cancelar" color="red" v-close-popup />
+                  </q-card-actions>
+            </q-card>
+      </q-dialog>
+
+      <q-dialog v-model="verRoteador" transition-show="scale" transition-hide="scale">
+            <q-card class="my-card">
+                  <q-card-section>
+                        <div class="text-h6">{{ mac }}</div>
+                        <div class="text-subtitle2">{{ pppoe }}</div>
+                  </q-card-section>
+
+                  <q-separator />
+
+                  <q-card-actions vertical>
+                        <q-btn flat @click="editar = true" v-if="reincidencia == 1">Reincidencia 1</q-btn>
+                        <q-btn flat v-if="reincidencia == 2">Reincidencia 2</q-btn>
+                        <q-btn flat v-if="reincidencia == 3">Reincidencia 3</q-btn>
+                  </q-card-actions>
+
+                  <q-card-actions align="right" class="bg-white text-teal">
+                        <q-btn flat label="FECHAR" color="red" v-close-popup @click="limpaVariaveis()" />
                   </q-card-actions>
             </q-card>
       </q-dialog>
@@ -60,7 +81,7 @@
 
                         <q-card-actions align="right" class="bg-white text-teal">
                               <q-btn flat label="CADASTRAR" color="primary" type="submit" />
-                              <q-btn flat label="Cancelar" color="red" v-close-popup />
+                              <q-btn flat label="Cancelar" color="red" v-close-popup @click="limpaVariaveis()" />
                         </q-card-actions>
                   </form>
             </q-card>
@@ -130,14 +151,14 @@
                                     class="modeloRoteador">
                               <img v-else-if="props.row.modelo == 'eb01'" src="../assets/eb01.png" alt="Eb01"
                                     class="modeloRoteador">
-                              <img v-else-if="props.row.modelo == 'fiberhome'" src="../assets/fiberhome.png" alt="Fiberhome"
-                                    class="modeloRoteador">
-                              <img v-else-if="props.row.modelo == 'intelbras'" src="../assets/intelbras.png" alt="Intelbras"
-                                    class="modeloRoteador">
-                              <img v-else-if="props.row.modelo == 'multilaser'" src="../assets/multilaser.png" alt="Multilaser"
-                                    class="modeloRoteador">
-                              <img v-else-if="props.row.modelo == 'zterouter'" src="../assets/zterouter.png" alt="Zte router"
-                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'fiberhome'" src="../assets/fiberhome.png"
+                                    alt="Fiberhome" class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'intelbras'" src="../assets/intelbras.png"
+                                    alt="Intelbras" class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'multilaser'" src="../assets/multilaser.png"
+                                    alt="Multilaser" class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'zterouter'" src="../assets/zterouter.png"
+                                    alt="Zte router" class="modeloRoteador">
                               <img v-else-if="props.row.modelo == 'zte'" src="../assets/zte.png" alt="Zte router"
                                     class="modeloRoteador">
                               <img v-else="props.row.modelo == 'nenhum'" src="../assets/nenhum.png" alt="Huawei"
@@ -147,15 +168,16 @@
 
                   <template v-slot:body-cell-reincidencia="props">
                         <q-td :props="props">
-                              <q-badge v-if="props.row.reincidencia == 1" transparent align="middle" color="green" class="q-pa-xs">
+                              <q-badge v-if="props.row.reincidencia == 1" transparent align="middle" color="green"
+                                    class="q-pa-xs">
                                     1 - Reincidencia(s)
                               </q-badge>
-                              <q-badge v-else-if="props.row.reincidencia == 2" transparent align="middle"
-                                    color="orange" class="q-pa-xs">
+                              <q-badge v-else-if="props.row.reincidencia == 2" transparent align="middle" color="orange"
+                                    class="q-pa-xs">
                                     2 - Reincidencia(s)
                               </q-badge>
-                              <q-badge v-else-if="props.row.reincidencia == 3" transparent align="middle"
-                                    color="red" class="q-pa-xs">
+                              <q-badge v-else-if="props.row.reincidencia == 3" transparent align="middle" color="red"
+                                    class="q-pa-xs">
                                     3 - Reincidencia(s)
                               </q-badge>
                         </q-td>
@@ -164,7 +186,7 @@
                   <template v-slot:body-cell-actions="props">
                         <q-td :props="props">
                               <a @click="editarRoteador(props)" class="q-mr-md iconesTabela">
-                                    <q-icon name="fa-solid fa-pencil" />
+                                    <q-icon name="fa-solid fa-eye" />
                               </a>
                               <a @click="pegaIdDeletar(props)" class="iconesTabela">
                                     <q-icon name="fa-solid fa-trash" />
@@ -254,10 +276,12 @@ export default {
             document.title = "Controle de roteadores";
             return {
                   dataHoje: ref(''),
-                  medium: ref(false),
+                  verRoteador: ref(false),
                   confirm: ref(false),
+                  editar: ref(false),
                   cadastrar: ref(false),
                   idRoteador: ref(''),
+                  modeloRoteador: ref(''),
                   mac: ref(''),
                   pppoe: ref(''),
                   observacao: ref(''),
@@ -288,7 +312,7 @@ export default {
                                     type: 'warning',
                                     message: 'PPPoE não possui 8 caracteres!'
                               })
-                        } else if (this.observacao.length <= 30 || this.observacao == null || this.observacao == "") {
+                        } else if (this.observacao.length <= 10 || this.observacao == null || this.observacao == "") {
                               $q.notify({
                                     type: 'warning',
                                     message: 'Insira uma descrição detalhada de 30 caracteres!'
@@ -308,7 +332,7 @@ export default {
                                     type: 'warning',
                                     message: 'PPPoE não possui 8 caracteres!'
                               })
-                        } else if (this.observacao.length <= 30 || this.observacao == null || this.observacao == "") {
+                        } else if (this.observacao.length <= 10 || this.observacao == null || this.observacao == "") {
                               $q.notify({
                                     type: 'warning',
                                     message: 'Insira uma descrição detalhada de 30 caracteres!'
@@ -329,6 +353,7 @@ export default {
             },
             limpaVariaveis() {
                   this.idRoteador = "";
+                  this.modeloRoteador = "";
                   this.mac = "";
                   this.pppoe = "";
                   this.observacao = "";
@@ -372,8 +397,9 @@ export default {
                   this.mac = props.row.mac;
                   this.pppoe = props.row.pppoe;
                   this.observacao = props.row.observacao;
-                  this.reincidencia = props.row.reincidencia
-                  this.medium = true;
+                  this.reincidencia = props.row.reincidencia;
+                  this.modeloRoteador = props.row.modelo;
+                  this.verRoteador = true;
             },
             atualizaRoteador() {
                   let apiURL = import.meta.env.VITE_APIURL + `update-roteador/${this.idRoteador}`;
@@ -391,7 +417,7 @@ export default {
 
                   axios.put(apiURL, roteador).then(() => {
                         this.limpaVariaveis();
-                        this.medium = false;
+                        this.verRoteador = false;
                         $q.notify({
                               icon: 'done',
                               color: 'positive',
@@ -436,18 +462,15 @@ export default {
                                           color: 'positive',
                                           message: 'Roteador cadastrado'
                                     })
-                                    this.ListaRoteadores();
                               }).catch(error => {
                                     console.log(error);
                               })
                         } else {
-                              let editaObservacao = "";
-                              let observacaoNova = this.observacao;
-                              let observacaoRegistrada = res.data.observacao;
-                              editaObservacao = "1 - " + observacaoRegistrada + ". 2 - " + observacaoNova;
-                              res.data.observacao = editaObservacao;
-                              axios.put(apiURL + 'save-roteador', res).then(() => {
+                              roteador._id = res.data._id;
+                              roteador.reincidencia = res.data.reincidencia;
+                              axios.put(apiURL + 'save-roteador', roteador).then(() => {
                                     roteador = {
+                                          _id: '',
                                           mac: '',
                                           pppoe: '',
                                           date: '',
@@ -461,14 +484,23 @@ export default {
                                           icon: 'done',
                                           color: 'positive',
                                           message: 'O roteador já está cadastrado! O número de reincidências foi aumentado!'
-                                    })
-                                    this.ListaRoteadores();
+                                    }).catch(error => {
+                                          console.log(error)
+                                    });
                               })
                         }
                   }).catch(error => {
                         console.log(error)
                   });
-            }
+            },
+            pegarModelo(modelo) {
+                  console.log(modelo)
+                  switch (modelo) {
+                        case 'huawei':
+                              imagem = "../assets/huawei.png";
+                              return imagem;
+                  }
+            },
       },
       computed: {
             ListaRoteadores() {

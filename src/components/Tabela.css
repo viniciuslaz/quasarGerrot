@@ -81,3 +81,7 @@
       padding: 8px 10px !important;
       font-weight: 400 !important;
 }
+
+.prioridade{
+      z-index: 999;
+}

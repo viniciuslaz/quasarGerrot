@@ -50,22 +50,6 @@
 
 						<q-item-section>Dashboard</q-item-section>
 					</q-item>
-
-					<q-item clickable @click="relatorio = true" class="q-px-xl">
-						<q-item-section avatar>
-							<q-icon name="fa-solid fa-chart-line" />
-						</q-item-section>
-
-						<q-item-section>Gerar relatório</q-item-section>
-					</q-item>
-
-					<q-item clickable v-on:click.prevent="exportPdf()" class="q-px-xl">
-						<q-item-section avatar>
-							<q-icon name="fa-solid fa-file-pdf" />
-						</q-item-section>
-
-						<q-item-section>Gerar PDF (teste)</q-item-section>
-					</q-item>
 				</q-list>
 			</div>
 		</q-drawer>
@@ -81,11 +65,7 @@
 import axios from "axios";
 import { ref } from 'vue'
 import emailjs from 'emailjs-com';
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
 let $q;
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default {
 	setup() {
@@ -112,128 +92,6 @@ export default {
 		this.ListaRotadores();
 	},
 	methods: {
-		exportPdf() {
-
-			const exs = [];
-			exs.push([
-				{
-					columns: [
-						[
-
-							{
-								text: 'Relatório mês 11/2022 de roteadores!',
-								width: '20%',
-								style: 'fontCabecalho'
-							},
-						],
-					],
-				}
-
-			]);
-			exs.push([
-				{
-					columns: [
-						[
-
-							{
-								text: 'PPPoE',
-								width: '20%',
-								style: 'header'
-							},
-						],
-						[
-							{
-								text: 'Mac',
-								width: '20%',
-								style: 'header'
-							},
-						],
-						[
-							{
-								text: 'Data',
-								width: '10%',
-								style: 'header'
-							},
-						],
-						[
-							{
-								text: 'Reincidencia(s)',
-								width: '10%',
-								style: 'header'
-							},
-						],
-					],
-				}
-
-			]);
-
-			this.roteadores.forEach(roteador => {
-				exs.push([
-					{
-						columns: [
-							[
-
-								{
-									text: roteador.pppoe,
-									width: '40%',
-									style: 'pppoe'
-								},
-							],
-							[
-								{
-									text: roteador.mac,
-									width: '20%',
-									style: 'informacoes'
-								},
-							],
-							[
-								{
-									text: roteador.date,
-									width: '10%',
-									style: 'informacoes'
-								},
-							],
-							[
-								{
-									text: roteador.reincidencia,
-									width: '5%',
-									style: 'informacoes'
-								},
-							],
-						],
-					}
-
-				]);
-
-			});
-			var test =
-			{
-
-				content: [
-					exs
-				],
-
-				styles: {
-					header: {
-						lineHeight: 2,
-					},
-					pppoe: {
-						alignment: 'left'
-					},
-					informacoes: {
-						alignment: 'center'
-					},
-					fontCabecalho: {
-						bold: true,
-						lineHeight: 2,
-					}
-				}
-			};
-
-			console.log(test)
-			const pdf = pdfMake.createPdf(exs)
-			pdf.download()
-		},
 		ListaRotadores() {
 			let apiURL = import.meta.env.VITE_APIURL;
 			axios.get(apiURL)
