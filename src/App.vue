@@ -29,7 +29,7 @@
 				<q-avatar size="160px">
 					<img src="./assets/user.png">
 				</q-avatar>
-				<p class="userNome q-mt-sm">William</p>
+				<p class="userNome q-mt-sm">User</p>
 				<p class="userFuncao">Admin</p>
 			</div>
 

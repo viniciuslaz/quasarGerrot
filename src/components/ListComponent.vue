@@ -250,7 +250,8 @@ export default {
                               label: 'Data',
                               field: 'date',
                               align: 'left',
-                              sortable: true
+                              sortable: true,
+                              sort: (a,) => parseInt(a, 31)
                         },
                         {
                               name: 'reincidencia',
