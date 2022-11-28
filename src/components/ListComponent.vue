@@ -111,22 +111,25 @@
                               <q-list>
                                     <q-item clickable v-close-popup>
                                           <q-item-section>
-                                                <q-toggle v-model="checkUmaReincidencias" label="1 reincidencia"
-                                                      class="q-mr-md" />
+                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="1" label="1 reincidencia" />
                                           </q-item-section>
                                     </q-item>
 
                                     <q-item clickable v-close-popup>
                                           <q-item-section>
-                                                <q-toggle v-model="checkDuasReincidencias" label="2 reincidencias"
-                                                      class="q-mr-md" />
+                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="2" label="2 reincidencias" />
                                           </q-item-section>
                                     </q-item>
 
                                     <q-item clickable v-close-popup>
                                           <q-item-section>
-                                                <q-toggle v-model="checkTresReincidencias" label="3 reincidencias"
-                                                      class="q-mr-md" />
+                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="3" label="3 reincidencias" />
+                                          </q-item-section>
+                                    </q-item>
+
+                                    <q-item clickable v-close-popup>
+                                          <q-item-section>
+                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="x" label="Sem filtro" />
                                           </q-item-section>
                                     </q-item>
                               </q-list>
@@ -287,9 +290,7 @@ export default {
                   pppoe: ref(''),
                   observacao: ref(''),
                   reincidencia: ref(''),
-                  checkUmaReincidencias: ref(false),
-                  checkDuasReincidencias: ref(false),
-                  checkTresReincidencias: ref(false),
+                  checkReincidencias: ref('x'),
             }
       },
       created() {
@@ -313,10 +314,10 @@ export default {
                                     type: 'warning',
                                     message: 'PPPoE não possui 8 caracteres!'
                               })
-                        } else if (this.observacao.length <= 10 || this.observacao == null || this.observacao == "") {
+                        } else if (this.observacao.length <= 8 || this.observacao == null || this.observacao == "") {
                               $q.notify({
                                     type: 'warning',
-                                    message: 'Insira uma descrição detalhada de 30 caracteres!'
+                                    message: 'Insira uma descrição detalhada de 8 caracteres!'
                               })
                         }
                         else {
@@ -333,10 +334,10 @@ export default {
                                     type: 'warning',
                                     message: 'PPPoE não possui 8 caracteres!'
                               })
-                        } else if (this.observacao.length <= 10 || this.observacao == null || this.observacao == "") {
+                        } else if (this.observacao.length <= 8 || this.observacao == null || this.observacao == "") {
                               $q.notify({
                                     type: 'warning',
-                                    message: 'Insira uma descrição detalhada de 30 caracteres!'
+                                    message: 'Insira uma descrição detalhada de 8 caracteres!'
                               })
                         }
                         else {
@@ -448,16 +449,9 @@ export default {
                   axios.get(apiURL + `get-roteador/${this.mac}`).then(res => {
                         if (res.data == null) {
                               axios.post(apiURL + 'create-roteador', roteador).then(() => {
-                                    roteador = {
-                                          mac: '',
-                                          pppoe: '',
-                                          date: '',
-                                          modelo: '',
-                                          observacao: '',
-                                          reincidencia: ''
-                                    }
                                     this.limpaVariaveis();
                                     this.cadastrar = false;
+                                    this.ListaRotadores();
                                     $q.notify({
                                           icon: 'done',
                                           color: 'positive',
@@ -470,17 +464,9 @@ export default {
                               roteador._id = res.data._id;
                               roteador.reincidencia = res.data.reincidencia;
                               axios.put(apiURL + 'save-roteador', roteador).then(() => {
-                                    roteador = {
-                                          _id: '',
-                                          mac: '',
-                                          pppoe: '',
-                                          date: '',
-                                          modelo: '',
-                                          observacao: '',
-                                          reincidencia: ''
-                                    }
                                     this.limpaVariaveis();
                                     this.cadastrar = false;
+                                    this.ListaRotadores();
                                     $q.notify({
                                           icon: 'done',
                                           color: 'positive',
@@ -506,21 +492,19 @@ export default {
       computed: {
             ListaRoteadores() {
                   const filter = this.config.filter;
-                  const checkUmaReincidencia = this.checkUmaReincidencias;
-                  const checkDuasReincidencia = this.checkDuasReincidencias;
-                  const checkTresReincidencia = this.checkTresReincidencias;
+                  const checkReincidencias = this.checkReincidencias;
                   return this.roteadores.filter((roteador) => {
-                        if (checkUmaReincidencia == true) {
+                        if (checkReincidencias == 1) {
                               return (
                                     (roteador.reincidencia.match(1) &&
                                           roteador.pppoe.match(filter)
                                     ));
-                        } else if (checkDuasReincidencia == true) {
+                        } else if (checkReincidencias == 2) {
                               return ((
                                     roteador.reincidencia.match(2) &&
                                     roteador.pppoe.match(filter)
                               ));
-                        } else if (checkTresReincidencia == true) {
+                        } else if (checkReincidencias == 3) {
                               return ((
                                     roteador.reincidencia.match(3) &&
                                     roteador.pppoe.match(filter)
