@@ -40,6 +40,33 @@
 
       <q-dialog v-model="verRoteador" transition-show="scale" transition-hide="scale">
             <q-card class="my-card">
+                  <img v-if="modeloRoteador == 'tplink'" src="../assets/tplink-g5.png" alt="TpLink"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'huawei'" src="../assets/huawei.png" alt="Huawei"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'datacom'" src="../assets/datacom.png" alt="Datacom"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'parks'" src="../assets/parks.png" alt="Parks"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'xpon'" src="../assets/xpon.png" alt="Xpon"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'cianet'" src="../assets/cianet.png" alt="Cianet"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'eb01'" src="../assets/eb01.png" alt="Eb01"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'fiberhome'" src="../assets/fiberhome.png" alt="Fiberhome"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'intelbras'" src="../assets/intelbras.png" alt="Intelbras"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'multilaser'" src="../assets/multilaser.png" alt="Multilaser"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'zterouter'" src="../assets/zterouter.png" alt="Zte router"
+                        class="roteadorCard">
+                  <img v-else-if="modeloRoteador == 'zte'" src="../assets/zte.png" alt="Zte router"
+                        class="roteadorCard">
+                  <img v-else="modeloRoteador == 'nenhum'" src="../assets/nenhum.png" alt="Huawei"
+                        class="roteadorCard">
+
                   <q-card-section>
                         <div class="text-h6">{{ mac }}</div>
                         <div class="text-subtitle2">{{ pppoe }}</div>
@@ -48,9 +75,9 @@
                   <q-separator />
 
                   <q-card-actions vertical>
-                        <q-btn flat @click="editar = true" v-if="reincidencia == 1">Reincidencia 1</q-btn>
-                        <q-btn flat v-if="reincidencia == 2">Reincidencia 2</q-btn>
-                        <q-btn flat v-if="reincidencia == 3">Reincidencia 3</q-btn>
+                        <q-btn flat @click="editar = true" v-if="verUmaReincidencia">Reincidencia 1</q-btn>
+                        <q-btn flat @click="editar = true" v-if="verDuasReincidencia">Reincidencia 2</q-btn>
+                        <q-btn flat @click="editar = true" v-if="verTresReincidencia">Reincidencia 3</q-btn>
                   </q-card-actions>
 
                   <q-card-actions align="right" class="bg-white text-teal">
@@ -111,25 +138,32 @@
                               <q-list>
                                     <q-item clickable v-close-popup>
                                           <q-item-section>
-                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="1" label="1 reincidencia" />
+                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt"
+                                                      unchecked-icon="panorama_fish_eye" val="1"
+                                                      label="1 reincidencia" />
                                           </q-item-section>
                                     </q-item>
 
                                     <q-item clickable v-close-popup>
                                           <q-item-section>
-                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="2" label="2 reincidencias" />
+                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt"
+                                                      unchecked-icon="panorama_fish_eye" val="2"
+                                                      label="2 reincidencias" />
                                           </q-item-section>
                                     </q-item>
 
                                     <q-item clickable v-close-popup>
                                           <q-item-section>
-                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="3" label="3 reincidencias" />
+                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt"
+                                                      unchecked-icon="panorama_fish_eye" val="3"
+                                                      label="3 reincidencias" />
                                           </q-item-section>
                                     </q-item>
 
                                     <q-item clickable v-close-popup>
                                           <q-item-section>
-                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="x" label="Sem filtro" />
+                                                <q-radio v-model="checkReincidencias" size="md" checked-icon="task_alt"
+                                                      unchecked-icon="panorama_fish_eye" val="x" label="Sem filtro" />
                                           </q-item-section>
                                     </q-item>
                               </q-list>
@@ -291,6 +325,9 @@ export default {
                   observacao: ref(''),
                   reincidencia: ref(''),
                   checkReincidencias: ref('x'),
+                  verUmaReincidencia: ref(false),
+                  verDuasReincidencia: ref(false),
+                  verTresReincidencia: ref(false),
             }
       },
       created() {
@@ -361,6 +398,9 @@ export default {
                   this.observacao = "";
                   this.reincidencia = "";
                   this.data = "";
+                  this.verUmaReincidencia = false;
+                  this.verDuasReincidencia = false;
+                  this.verTresReincidencia = false;
             },
             ListaRotadores() {
                   let apiURL = import.meta.env.VITE_APIURL;
@@ -401,6 +441,17 @@ export default {
                   this.observacao = props.row.observacao;
                   this.reincidencia = props.row.reincidencia;
                   this.modeloRoteador = props.row.modelo;
+
+                  if(this.reincidencia == 1){
+                        this.verUmaReincidencia = true;
+                  }else if(this.reincidencia == 2){
+                        this.verUmaReincidencia = true;
+                        this.verDuasReincidencia = true;
+                  }else if(this.reincidencia == 3){
+                        this.verUmaReincidencia = true;
+                        this.verDuasReincidencia = true;
+                        this.verTresReincidencia = true;
+                  }
                   this.verRoteador = true;
             },
             atualizaRoteador() {

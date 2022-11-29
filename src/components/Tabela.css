@@ -77,6 +77,12 @@
       height: 45px;
 }
 
+.roteadorCard{
+      width: 30px;
+      height: 180px;
+      padding: 15px;
+}
+
 .q-btn{
       padding: 8px 10px !important;
       font-weight: 400 !important;
