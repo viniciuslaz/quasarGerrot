@@ -64,6 +64,8 @@
                         class="roteadorCard">
                   <img v-else-if="modeloRoteador == 'zte'" src="../assets/zte.png" alt="Zte router"
                         class="roteadorCard">
+                        <img v-else-if="modeloRoteador == 'datacombridge'" src="../assets/datacomBridge.png" alt="Datacom bridge"
+                        class="roteadorCard">
                   <img v-else="modeloRoteador == 'nenhum'" src="../assets/nenhum.png" alt="Huawei"
                         class="roteadorCard">
 
@@ -197,6 +199,8 @@
                               <img v-else-if="props.row.modelo == 'zterouter'" src="../assets/zterouter.png"
                                     alt="Zte router" class="modeloRoteador">
                               <img v-else-if="props.row.modelo == 'zte'" src="../assets/zte.png" alt="Zte router"
+                                    class="modeloRoteador">
+                              <img v-else-if="props.row.modelo == 'datacombridge'" src="../assets/datacombridge.jpg" alt="Datacom Bridge"
                                     class="modeloRoteador">
                               <img v-else="props.row.modelo == 'nenhum'" src="../assets/nenhum.png" alt="Huawei"
                                     class="modeloRoteador">
