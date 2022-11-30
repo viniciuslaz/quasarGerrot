@@ -13,7 +13,7 @@
       </q-dialog>
 
       <q-dialog v-model="editar" persistent transition-show="scale" transition-hide="scale" class="prioridade">
-            <q-card class="q-pa-sm" style="width: 400px">
+            <q-card class="q-pa-md" style="width: 420px">
                   <div class="tituloEditaRoteador">Editar roteador:</div>
 
                   <q-input outlined class="q-mb-md" v-model="mac" label="Mac:">
@@ -39,7 +39,7 @@
       </q-dialog>
 
       <q-dialog v-model="verRoteador" transition-show="scale" transition-hide="scale">
-            <q-card class="my-card">
+            <q-card class="my-card" style="width: 230px">
                   <img v-if="modeloRoteador == 'tplink'" src="../assets/tplink-g5.png" alt="TpLink"
                         class="roteadorCard">
                   <img v-else-if="modeloRoteador == 'huawei'" src="../assets/huawei.png" alt="Huawei"
@@ -64,7 +64,7 @@
                         class="roteadorCard">
                   <img v-else-if="modeloRoteador == 'zte'" src="../assets/zte.png" alt="Zte router"
                         class="roteadorCard">
-                        <img v-else-if="modeloRoteador == 'datacombridge'" src="../assets/datacomBridge.png" alt="Datacom bridge"
+                        <img v-else-if="modeloRoteador == 'datacombridge'" src="../assets/datacombridge.jpg" alt="Datacom bridge"
                         class="roteadorCard">
                   <img v-else="modeloRoteador == 'nenhum'" src="../assets/nenhum.png" alt="Huawei"
                         class="roteadorCard">
@@ -89,8 +89,8 @@
       </q-dialog>
 
       <q-dialog v-model="cadastrar" persistent transition-show="scale" transition-hide="scale">
-            <q-card class="q-pa-sm" style="width: 400px">
-                  <div class="tituloEditaRoteador">Cadastrar roteador:</div>
+            <q-card class="q-pa-md" style="width: 400px">
+                  <div class="tituloEditaRoteador">Cadastrar</div>
 
                   <form @submit.prevent.stop="validaInformacoes" @reset.prevent.stop="onReset" class="q-gutter-md">
                         <q-input outlined class="q-mb-md" v-model="mac" label="Mac:" type="text"
@@ -99,6 +99,7 @@
                                     <q-icon name="close" @click="mac = ''" class="cursor-pointer" />
                               </template>
                         </q-input>
+                        
                         <q-input outlined class="q-mb-md" v-model="pppoe" label="PPPoE:" type="text">
                               <template v-slot:append>
                                     <q-icon name="close" @click="pppoe = ''" class="cursor-pointer" />
@@ -108,7 +109,7 @@
 
                         <q-input v-model="observacao" outlined autogrow label="Obs:" type="text" />
 
-                        <q-card-actions align="right" class="bg-white text-teal">
+                        <q-card-actions align="right" class="bg-white">
                               <q-btn flat label="CADASTRAR" color="primary" type="submit" />
                               <q-btn flat label="Cancelar" color="red" v-close-popup @click="limpaVariaveis()" />
                         </q-card-actions>
@@ -474,7 +475,7 @@ export default {
 
                   axios.put(apiURL, roteador).then(() => {
                         this.limpaVariaveis();
-                        this.verRoteador = false;
+                        this.editar = false;
                         $q.notify({
                               icon: 'done',
                               color: 'positive',

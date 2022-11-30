@@ -23,6 +23,7 @@
 .tituloEditaRoteador {
       font-size: 20px;
       margin: 0 0 10px 2px;
+      padding: 10px 0 10px 0;
 }
 
 .q-table td:first-child {
@@ -90,4 +91,8 @@
 
 .prioridade{
       z-index: 999;
+}
+
+.q-card{
+      border-radius: 10px !important;
 }
