@@ -43,13 +43,20 @@
 						<q-item-section>Listar</q-item-section>
 					</q-item>
 
-					<q-item clickable to="/dashboard" active-class="my-menu-link" class="q-px-xl">
+				<!-- 	<q-item clickable to="/dashboard" active-class="my-menu-link" class="q-px-xl" disable>
 						<q-item-section avatar>
 							<q-icon name="dashboard" />
 						</q-item-section>
-
 						<q-item-section>Dashboard</q-item-section>
 					</q-item>
+
+				<q-item clickable to="/users" active-class="my-menu-link" class="q-px-xl" disable>
+						<q-item-section avatar>
+							<q-icon name="fa-solid fa-user" />
+						</q-item-section>
+
+						<q-item-section>Usuarios</q-item-section>
+					</q-item> -->
 				</q-list>
 			</div>
 		</q-drawer>

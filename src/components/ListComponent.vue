@@ -5,7 +5,7 @@
                         <span>Tem certeza que deseja deletar o roteador?</span>
                   </q-card-section>
 
-                  <q-card-actions align="right" :props="props">
+                  <q-card-actions align="right">
                         <q-btn flat label="Cancelar" color="primary" v-close-popup />
                         <q-btn flat label="Excluir" color="red" @click.prevent="deletarRoteador()" v-close-popup />
                   </q-card-actions>
@@ -13,23 +13,50 @@
       </q-dialog>
 
       <q-dialog v-model="editar" persistent transition-show="scale" transition-hide="scale" class="prioridade">
-            <q-card class="q-pa-md" style="width: 420px">
+            <q-card v-if="checkModal == 1" class="q-pa-md" style="width: 420px">
                   <div class="tituloEditaRoteador">Editar roteador:</div>
-
-                  <q-input outlined class="q-mb-md" v-model="mac" label="Mac:">
-                        <template v-slot:append>
-                              <q-icon name="close" @click="mac = ''" class="cursor-pointer" />
-                        </template>
-                  </q-input>
                   <q-input outlined class="q-mb-md" v-model="pppoe" label="PPPoE:">
                         <template v-slot:append>
                               <q-icon name="close" @click="pppoe = ''" class="cursor-pointer" />
                         </template>
                   </q-input>
-                  <q-input v-model="dataHoje" class="q-mb-md" outlined label="Data:" disable />
-                  <q-input outlined class="q-mb-md" v-model="reincidencia" label="Reincidencias:" disable />
+                  <q-input v-model="data" class="q-mb-md" outlined label="Data:" disable />
 
                   <q-input v-model="observacao" outlined autogrow label="Obs:" />
+
+                  <q-card-actions align="right" class="bg-white text-teal">
+                        <q-btn flat label="ATUALIZAR" color="primary" @click="validaInformacoes(true)" />
+                        <q-btn flat label="Cancelar" color="red" v-close-popup />
+                  </q-card-actions>
+            </q-card>
+
+            <q-card v-if="(checkModal == 2)" class="q-pa-md" style="width: 420px">
+                  <div class="tituloEditaRoteador">Editar roteador:</div>
+                  <q-input outlined class="q-mb-md" v-model="pppoe2" label="PPPoE:">
+                        <template v-slot:append>
+                              <q-icon name="close" @click="pppoe2 = ''" class="cursor-pointer" />
+                        </template>
+                  </q-input>
+                  <q-input v-model="data2" class="q-mb-md" outlined label="Data:" disable />
+
+                  <q-input v-model="observacao2" outlined autogrow label="Obs:" />
+
+                  <q-card-actions align="right" class="bg-white text-teal">
+                        <q-btn flat label="ATUALIZAR" color="primary" @click="validaInformacoes(true)" />
+                        <q-btn flat label="Cancelar" color="red" v-close-popup />
+                  </q-card-actions>
+            </q-card>
+
+            <q-card v-if="(checkModal == 3)" class="q-pa-md" style="width: 420px">
+                  <div class="tituloEditaRoteador">Editar roteador:</div>
+                  <q-input outlined class="q-mb-md" v-model="pppoe3" label="PPPoE:">
+                        <template v-slot:append>
+                              <q-icon name="close" @click="pppoe3 = ''" class="cursor-pointer" />
+                        </template>
+                  </q-input>
+                  <q-input v-model="data3" class="q-mb-md" outlined label="Data:" disable />
+
+                  <q-input v-model="observacao3" outlined autogrow label="Obs:" />
 
                   <q-card-actions align="right" class="bg-white text-teal">
                         <q-btn flat label="ATUALIZAR" color="primary" @click="validaInformacoes(true)" />
@@ -77,9 +104,9 @@
                   <q-separator />
 
                   <q-card-actions vertical>
-                        <q-btn flat @click="editar = true" v-if="verUmaReincidencia">Reincidencia 1</q-btn>
-                        <q-btn flat @click="editar = true" v-if="verDuasReincidencia">Reincidencia 2</q-btn>
-                        <q-btn flat @click="editar = true" v-if="verTresReincidencia">Reincidencia 3</q-btn>
+                        <q-btn flat @click="(editar = true, checkModal = 1)" v-if="verUmaReincidencia">Reincidencia 1</q-btn>
+                        <q-btn flat @click="(editar = true, checkModal = 2)" v-if="verDuasReincidencia">Reincidencia 2</q-btn>
+                        <q-btn flat @click="(editar = true, checkModal = 3)" v-if="verTresReincidencia">Reincidencia 3</q-btn>
                   </q-card-actions>
 
                   <q-card-actions align="right" class="bg-white text-teal">
@@ -271,14 +298,6 @@ export default {
                               align: 'center',
                         },
                         {
-                              name: 'pppoe',
-                              required: true,
-                              label: 'PPPoE',
-                              field: 'pppoe',
-                              align: 'left',
-                              sortable: true,
-                        },
-                        {
                               name: 'mac',
                               required: true,
                               label: 'MAC',
@@ -327,8 +346,16 @@ export default {
                   modeloRoteador: ref(''),
                   mac: ref(''),
                   pppoe: ref(''),
+                  pppoe2: ref(''),
+                  pppoe3: ref(''),
+                  data: ref(''),
+                  data2: ref(''),
+                  data3: ref(''),
                   observacao: ref(''),
+                  observacao2: ref(''), 
+                  observacao3: ref(''), 
                   reincidencia: ref(''),
+                  checkModal: ref(1),
                   checkReincidencias: ref('x'),
                   verUmaReincidencia: ref(false),
                   verDuasReincidencia: ref(false),
@@ -400,9 +427,15 @@ export default {
                   this.modeloRoteador = "";
                   this.mac = "";
                   this.pppoe = "";
+                  this.pppoe2 = "";
+                  this.pppoe3 = "";
                   this.observacao = "";
+                  this.observacao2 = "";
+                  this.observacao3 = "";
                   this.reincidencia = "";
                   this.data = "";
+                  this.data2 = "";
+                  this.data3 = "";
                   this.verUmaReincidencia = false;
                   this.verDuasReincidencia = false;
                   this.verTresReincidencia = false;
@@ -440,12 +473,20 @@ export default {
                   })
             },
             editarRoteador(props) {
+                  console.log(props)
                   this.idRoteador = props.row._id;
                   this.mac = props.row.mac;
                   this.pppoe = props.row.pppoe;
                   this.observacao = props.row.observacao;
                   this.reincidencia = props.row.reincidencia;
                   this.modeloRoteador = props.row.modelo;
+                  this.data = props.row.date;
+                  this.data2 = props.row.segundadate;
+                  this.data3 = props.row.terceiradate;
+                  this.pppoe2 = props.row.segundopppoe;
+                  this.pppoe3 = props.row.terceiropppoe;
+                  this.observacao2 = props.row.segundaobservacao;
+                  this.observacao3 = props.row.terceiraobservacao;
 
                   if(this.reincidencia == 1){
                         this.verUmaReincidencia = true;
