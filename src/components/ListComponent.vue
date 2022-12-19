@@ -613,7 +613,7 @@ export default {
                                           roteador.date.match(filter)
                                     ));
                         }
-                  }).slice(0, 200);
+                  });
             },
       }
 }
